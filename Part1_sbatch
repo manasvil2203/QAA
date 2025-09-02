@@ -1,0 +1,19 @@
+#!/bin/bash
+#SBATCH --account=bgmp                    #REQUIRED: which account to use
+#SBATCH --partition=bgmp                  #REQUIRED: which partition to use
+#SBATCH --cpus-per-task=1                #optional: number of cpus, default is 1
+#SBATCH --mem=16GB                        #optional: amount of memory, default is 4GB per cpu
+#SBATCH --mail-user=manasvil@uoregon.edu     #optional: if you'd like email
+#SBATCH --mail-type=ALL                   #optional: must set email first, what type of email you want
+#SBATCH --time=2:00:00
+#SBATCH --job-name=qual          #optional: job name
+#SBATCH --output=qual_%j.out       #optional: file to store stdout from job, %j adds the assigned jobID
+#SBATCH --error=qual_%j.err        #optional: file to store stderr from job, %j adds the assigned jobID
+
+# /usr/bin/time -v  ./Part1_script.py -f ./SRR25630311_1.fastq -l 150
+
+#/usr/bin/time -v ./Part1_script.py -f ./SRR25630311_2.fastq -l 150
+
+#/usr/bin/time -v ./Part1_script.py -f ./SRR25630392_1.fastq -l 150
+
+/usr/bin/time -v ./Part1_script.py -f ./SRR25630392_2.fastq -l 150
