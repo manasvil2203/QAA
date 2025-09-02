@@ -1,0 +1,35 @@
+---
+title: "PS2_length_distribution graphs"
+output: html_document
+date: "2025-08-30"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr) 
+library(dplyr) 
+library(tidyr) 
+library(ggplot2)
+```
+
+```{r}
+plot_len <- function(r1, r2, title, outpng){
+  d1 <- read_tsv(r1, col_names=c("len","count")) %>% mutate(read="R1")
+  d2 <- read_tsv(r2, col_names=c("len","count")) %>% mutate(read="R2")
+  dd <- bind_rows(d1,d2) %>%
+    group_by(read) %>% mutate(frac = count / sum(count)) %>% ungroup()
+
+  ggplot(dd, aes(len, frac, color=read)) +
+    geom_line() +
+    labs(x="Trimmed read length (bp)", y="Fraction of reads", title=title) +
+    theme_bw()
+  ggsave(outpng, width=6, height=4, dpi=200)
+}
+
+```
+
+```{r}
+plot_len("SRR25630311_1_len.tsv ","SRR25630311_2_len.tsv ","Sample SRR25630311: trimmed length distribution","sampleSRR25630311_len_dist.png")
+plot_len("SRR25630392_1_len.tsv ","SRR25630392_2_len.tsv","Sample SRR25630392: trimmed length distribution","sampleSRR25630392_len_dist.png")
+```
+
