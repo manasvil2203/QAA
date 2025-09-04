@@ -1,0 +1,112 @@
+---
+title: "QAA_report.pdf"
+output:
+  pdf_document: default
+  html_document: default
+date: "2025-09-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part 1
+
+### FASTQC Plots
+
+**SRR25630311_1:**
+
+![**Figure 1.** Per-base sequence quality scores across all reads for sample SRR25630311_1 , showing consistently high Phred scores with only a slight decline at the 3' end.](./Fig_report/per_base_quality_SRR25630311_1.png)
+
+![**Figure 2.** Per-base N content across all reads for sample SRR25630311_1, showing 0% undetermined bases and confirming confident base calls throughout the read length.](./Fig_report/per_base_n_content_SRR25630311_1.png)
+
+**SRR25630311_2:**
+
+![**Figure 1.** Per-base sequence quality scores across all reads for sample SRR25630311_2, showing consistently high Phred scores with only a slight decline at the 3' end.](./Fig_report/per_base_quality_SRR25630311_2.png)
+
+![**Figure 2.** Per-base N content across all reads for sample SRR25630311_2, showing 0% undetermined bases and confirming confident base calls throughout the read length.](./Fig_report/per_base_n_content_SRR25630311_2.png)
+
+**SRR25630392_1:**
+
+![**Figure 1.** Per-base sequence quality scores across all reads for sample SRR25630392_1, showing consistently high Phred scores with only a slight decline at the 3' end.](./Fig_report/per_base_quality_SRR25630392_1.png)
+
+![**Figure 2.** Per-base N content across all reads for sample SRR25630392_1, showing 0% undetermined bases and confirming confident base calls throughout the read length.](./Fig_report/per_base_n_content_SRR25630392_1.png)
+
+**SRR25630392_2:**
+
+![**Figure 1.** Per-base sequence quality scores across all reads for sample SRR25630392_2, showing consistently high Phred scores with only a slight decline at the 3' end.](./Fig_report/per_base_quality_SRR25630392_2.png)
+
+![**Figure 2.** Per-base N content across all reads for sample SRR25630392_2, showing 0% undetermined bases and confirming confident base calls throughout the read length.](./Fig_report/per_base_n_content_SRR25630392_2.png)
+
+**Analysis**
+
+The sequencing data show consistently high per-base quality scores across the entire read length, with median Phred values remaining well within the reliable range. This strong quality profile is directly reflected in the per-base N content plot, which shows an absence of undetermined bases throughout the reads. The agreement between the two plots indicates that base calling was highly accurate, with no evidence of uncertainty or ambiguity across positions.This is true for all four cases.
+
+### My script plots
+
+**SRR25630311_1:**
+
+![**Figure 1.** Mean Phred quality scores across all base positions for sample SRR25630311_1. Scores remain exceptionally high (above Q35) across the read length, with only a gradual decline observed toward the 3' end, indicating strong overall sequencing quality.](./Fig_report/SRR25630311_1.fastq.png)
+
+**SRR25630311_2:**
+
+![**Figure 2.** Mean Phred quality scores across all base positions for sample SRR25630311_2. Scores remain exceptionally high (above Q35) across the read length, with only a gradual decline observed toward the 3' end, indicating strong overall sequencing quality.](./Fig_report/SRR25630311_2.fastq.png)
+
+**SRR25630392_1:**
+
+![**Figure 3.** Mean Phred quality scores across all base positions for sample SRR25630392_1. Scores remain exceptionally high (above Q35) across the read length, with only a gradual decline observed toward the 3' end, indicating strong overall sequencing quality.](./Fig_report/SRR25630392_1.fastq.png)
+
+**SRR25630392_2:**
+
+![**Figure 4.** Mean Phred quality scores across all base positions for sample SRR25630392_2. Scores remain exceptionally high (above Q35) across the read length, with only a gradual decline observed toward the 3' end, indicating strong overall sequencing quality.](./Fig_report/SRR25630392_2.fastq.png)
+
+**Analysis** Well, they look basically the same, the only differnce is the scale, but taking that into account they are basically the same. When I compared the runtimes and memory usage between FastQC and my own script, the difference was clear. For the larger SRR25630311 dataset, FastQC finished in about eight and a half minutes but used close to 700 MB of memory, while my script took almost fourteen minutes per read file but only needed around 60 MB. For the smaller SRR25630392 dataset, FastQC ran in under a minute with about 600 MB of memory, while my script took about a minute and a half with the same low memory footprint. What I noticed is that FastQC is much faster because it is a compiled, optimized program that uses multiple threads and trades off higher memory usage for speed. My Python implementation with the running sum strategy, on the other hand, is much lighter on memory but slower since it is interpreted code and not as optimized for performance. So in my runs, FastQC consistently finished quicker, but my script was more efficient in memory.
+
+### Overall data quality of two libraries
+
+1.  **SRR25630311_1.fastq:** From the FastQC summary plots, the overall data quality of these libraries looks very good, with only a few minor caveats. The per-base quality scores remain high across the full read length, with median Phred scores consistently above 34, meaning error probabilities are well below 1 in 1,000. The distribution of mean quality per read confirms that the vast majority of reads have excellent quality, which matches expectations for Illumina short-read sequencing. The sequence length distribution shows uniform read lengths of 150 bp, so trimming for variable lengths will not be required.
+
+    Adapter content begins to rise only near the very ends of the reads, suggesting some low-level adapter contamination at the tail but nothing severe. This could easily be removed with a trimming step before downstream analysis. The N content plot is essentially flat at zero, which means base calls were highly confident and not ambiguous. Sequence content across all bases does show some early-cycle bias, which is typical of Illumina libraries due to random priming and reduced diversity at the start of the reads, but it stabilizes quickly into the expected \~25% distribution for each base. The GC content distribution is roughly centered around 50% and tracks the theoretical curve reasonably well, though the observed distribution has a bit more variance, which could reflect biological variation in the library. Per-tile quality shows almost entirely blue (good quality), with only a tiny patch of lower quality, which is negligible given the dataset size.
+
+    Overall, I would consider these libraries to be of sufficiently high quality to proceed with downstream analyses
+
+2.  **SRR25630311_2.fastq:** In this second library, the overall data quality is still strong, but there are a few points that stand out compared to the first dataset. The per-base quality scores remain high for most of the read length, with Phred scores above 30 for the majority of positions, though there is a noticeable drop toward the very end of the reads. This drop is typical for Illumina sequencing and would be handled effectively with a standard quality trimming step. The sequence length distribution shows all reads at 150 bp, so trimming would not create variable-length read complications. Adapter content is again low overall, only rising slightly at the ends of reads, which suggests minimal contamination that can be easily removed. The N content remains at zero, showing no ambiguous bases, and the GC distribution is centered close to the expected theoretical distribution with only mild deviation, indicating that the library is not strongly biased.
+
+    One notable difference here is the duplication plot, which shows a relatively high level of duplication, with less than 20% of unique reads remaining after deduplication. High duplication levels can indicate PCR amplification bias or low input complexity, which might affect downstream analyses depending on the application. The sequence content across bases also shows some bias at the beginning of reads before stabilizing, a common artifact of library preparation. Despite these issues, the per-sequence quality distribution shows that the majority of reads have very high average quality.
+
+    Based on these results, I would consider this library of sufficient quality for downstream analysis.
+
+3.  **SRR25630392_1.fastq:** For the SRR25630392_1.fastq library, the overall quality looks very solid, though there are a couple of things to keep in mind. The per-base quality scores are consistently high across nearly the full read length, with most bases above a Phred score of 30, which indicates a very low error rate. There is some decline at the extreme 3' end, but it is relatively modest and can easily be corrected with quality trimming. The sequence length distribution shows that all reads are a uniform 150 bp, which is expected and makes downstream processing simpler.
+
+    Adapter content is minimal and only rises slightly at the ends of reads, so a trimming step will address this without significant loss of data. N content is essentially absent, which shows that base calling was highly confident throughout. The GC distribution closely matches the theoretical curve, suggesting that the library has good representation of the genome and no strong composition bias. The per-sequence quality distribution confirms that the vast majority of reads are very high quality.
+
+    Where this library differs from ideal is in the duplication analysis: about 40% of the reads remain after deduplication, which indicates moderate duplication levels. This is not extreme, but it does mean that a substantial fraction of the reads may be redundant, either due to PCR amplification bias or low input complexity. That can reduce the effective usable diversity of the dataset.
+
+    Taking everything together, I would consider this dataset high quality and definitely usable for downstream analysis.
+
+4.  **SRR25630392_2.fastq:** Looking at the FastQC results for SRR25630392_2.fastq, the data quality appears strong overall, with only a few areas that need attention. The per-base quality scores are excellent across most of the read, consistently above a Phred score of 30, which means very low sequencing error rates. Similar to the other libraries, there is a slight dip in quality near the 3' end, but it stays above acceptable thresholds and could be addressed with a trimming step. The sequence length distribution shows that reads are uniform at 150 bp, which is exactly what I’d expect from Illumina output.
+
+    Adapter content is low, only rising slightly at the very end of the reads, so adapter trimming should be straightforward. N content is effectively zero, meaning base calls were confident across the entire run. The GC distribution matches the theoretical expectation very closely, which suggests there is no major bias in the composition of the dataset. The per-sequence quality distribution also confirms that most reads are very high quality.
+
+    The duplication analysis shows that about 42% of reads remain after deduplication, which is moderate duplication. This is better than one of the earlier libraries where duplication was much higher, and it suggests this dataset has decent complexity, though some redundancy from PCR amplification is present. The per-tile quality plot shows mostly uniform performance across the flowcell, with only a few faint areas of lower quality, which is not unusual and not likely to impact downstream analysis significantly.
+
+    From my perspective, this dataset is of high enough quality to use in further analysis.
+
+## Part 2
+
+![**Figure 1.** Trimmed read length distribution for sample SRR25630311. Both R1 and R2 reads cluster tightly at 150 bp after trimming, with only a negligible fraction shorter than full length, indicating that adapter trimming removed very little sequence and that read quality was high across the dataset.](./Fig_report/sampleSRR25630311_len_dist.png)
+
+![**Figure 2.** Trimmed read length distribution for sample SRR25630392. Both R1 and R2 reads cluster tightly at 150 bp after trimming, with only a negligible fraction shorter than full length, indicating that adapter trimming removed very little sequence and that read quality was high across the dataset.](./Fig_report/sampleSRR25630392_len_dist.png)
+
+### Analysis of graphs
+
+For **SRR25630311**, R1 and R2 look almost identical, with most reads still at full length, so adapter trimming was minimal. Still, I would expect R2 to be trimmed more often in general since it is sequenced second and more likely to run into adapters or show lower quality than R1.
+
+For **SRR25630392**, both R1 and R2 also show nearly all reads at full length, so adapter trimming was minimal here too. Still, just like with the other sample, I would expect R2 to be trimmed a little more often in general since it is sequenced second and has a higher chance of running into adapters or showing slightly lower quality.
+
+## Part 3
+
+| Sample      | Mapped Reads | Unmapped Reads |
+|-------------|--------------|----------------|
+| SRR25630311 | 33,556,239   | 9,353,061      |
+| SRR25630392 | 7,522,866    | 492,812        |
