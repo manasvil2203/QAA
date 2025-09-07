@@ -60,40 +60,70 @@ The sequencing data show consistently high per-base quality scores across the en
 
 ![**Figure 4.** Mean Phred quality scores across all base positions for sample SRR25630392_2. Scores remain exceptionally high (above Q35) across the read length, with only a gradual decline observed toward the 3' end, indicating strong overall sequencing quality.](./Fig_report/SRR25630392_2.fastq.png)
 
-**Analysis** Well, they look basically the same, the only differnce is the scale, but taking that into account they are basically the same. When I compared the runtimes and memory usage between FastQC and my own script, the difference was clear. For the larger SRR25630311 dataset, FastQC finished in about eight and a half minutes but used close to 700 MB of memory, while my script took almost fourteen minutes per read file but only needed around 60 MB. For the smaller SRR25630392 dataset, FastQC ran in under a minute with about 600 MB of memory, while my script took about a minute and a half with the same low memory footprint. What I noticed is that FastQC is much faster because it is a compiled, optimized program that uses multiple threads and trades off higher memory usage for speed. My Python implementation with the running sum strategy, on the other hand, is much lighter on memory but slower since it is interpreted code and not as optimized for performance. So in my runs, FastQC consistently finished quicker, but my script was more efficient in memory.
+**Analysis** Well, they look basically the same, the only differnce is the scale, but taking that into account they are basically the same. When I compared the runtimes and memory usage between FastQC and my own script, the difference was clear. For the larger SRR25630311 dataset, FastQC finished in about eight and a half minutes but used close to 700 MB of memory, while my script took almost fourteen minutes per read file but only needed around 60 MB. For the smaller SRR25630392 dataset, FastQC ran in under a minute with about 600 MB of memory, while my script took about a minute and a half with the same low memory footprint. What I noticed is that FastQC is much faster probably beacuse it is a compiled program by experts. My Python script on the other hand, is much lighter on memory but slower since it is not as optimized. I did not code efficiency but for accuracy. So in my runs, FastQC consistently finished quicker, but my script was more efficient in memory.
 
 ### Overall data quality of two libraries
 
-1.  **SRR25630311_1.fastq:** The FastQC results show that the sequencing data is overall very good. The quality scores are high across the whole read length (Phred >34, so error rates are very low), and most reads are high quality as expected. All reads are 150 bp long, so trimming for read length isn’t needed.
+1.  **SRR25630311_1.fastq:** The FastQC results show that the sequencing data is overall very good. The quality scores are high across the whole read length (Phred \>34, so error rates are very low), and most reads are high quality as expected. All reads are 150 bp long, so trimming for read length isn’t needed.
 
-There is a small amount of adapter contamination near the ends, but that can be easily fixed with trimming. The N content is basically zero, meaning base calls are confident. Base composition shows a little bias at the start (common with Illumina), but it evens out quickly. GC content is centered around 50% with only minor variation. The per-tile quality is almost entirely good, with just a tiny patch of lower quality that doesn’t matter.
+    There is a small amount of adapter contamination near the ends, but that can be easily fixed with trimming. The N content is basically zero, meaning base calls are confident. Base composition shows a little bias at the start (common with Illumina), but it evens out quickly. GC content is centered around 50% with only minor variation. The per-tile quality is almost entirely good, with just a tiny patch of lower quality that doesn’t matter.
 
-Overall, these libraries are high quality and ready for downstream analysis.
+    Overall, these libraries are high quality and ready for downstream analysis.
 
 2.  **SRR25630311_2.fastq:** TThe second library still shows strong overall quality. Per-base scores are mostly above 30, though they drop off at the ends, which is normal for Illumina and can be fixed with trimming. All reads are 150 bp long, so trimming won’t cause variable read lengths. Adapter content is low and only rises slightly at the ends, while N content is zero and GC content is close to expected, with only small deviations.
 
-One difference from the first dataset is the sequence duplication plot in FastQC, which shows that less than 20% of reads are unique. This suggests high duplication, possibly from PCR bias or low input complexity, and it could impact some downstream analyses. The base composition shows some early bias, but it stabilizes quickly.
+    One difference from the first dataset is the sequence duplication plot in FastQC, which shows that less than 20% of reads are unique. This suggests high duplication, possibly from PCR bias or low input complexity, and it could impact some downstream analyses. The base composition shows some early bias, but it stabilizes quickly.
 
-Overall, most reads are still very high quality, so this library can still be used for downstream analysis
+    Overall, most reads are still very high quality, so this library can still be used for downstream analysis
 
 3.  **SRR25630392_1.fastq:** The SRR25630392_1.fastq library looks pretty good overall. Base quality scores stay high (mostly above 30) across the read, with only a small drop at the very end that trimming can fix. All the reads are 150 bp long, so length isn’t an issue.
 
-Adapter contamination is very low and only shows up at the ends, and there are basically no N’s, meaning the base calls are confident. The GC content looks close to what’s expected, and most reads have high average quality.
+    Adapter contamination is very low and only shows up at the ends, and there are basically no N’s, meaning the base calls are confident. The GC content looks close to what’s expected, and most reads have high average quality.
 
-The sequence duplication plot in FastQC shows that only about 40% of reads are unique. This suggests some redundancy in the data, likely from PCR bias or low input complexity, so there’s a bit less diversity than ideal.
+    The sequence duplication plot in FastQC shows that only about 40% of reads are unique. This suggests some redundancy in the data, likely from PCR bias or low input complexity, so there’s a bit less diversity than ideal.
 
-Even with that, the library is still high quality and fine to use for downstream analysis.
+    Even with that, the library is still high quality and fine to use for downstream analysis.
 
 4.  **SRR25630392_2.fastq:** The SRR25630392_2.fastq library looks strong overall. Base quality scores are high (mostly above 30) across the read, with only a small drop at the 3′ end that trimming can fix. All reads are 150 bp long, so length isn’t an issue.
 
-Adapter content is very low and only shows up at the very end, and there are basically no N’s. The GC content matches what we’d expect, and most reads have high average quality.
+    Adapter content is very low and only shows up at the very end, and there are basically no N’s. The GC content matches what we’d expect, and most reads have high average quality.
 
-The sequence duplication plot in FastQC shows that about 42% of reads are unique. This suggests a moderate level of redundancy in the data, which could come from PCR amplification or naturally abundant sequences (like highly expressed genes), but it’s not extreme. The per-tile quality is mostly uniform, with only a few faint low-quality spots that aren’t a big concern.
+    The sequence duplication plot in FastQC shows that about 42% of reads are unique. This suggests a moderate level of redundancy in the data, which could come from PCR amplification or naturally abundant sequences (like highly expressed genes), but it’s not extreme. The per-tile quality is mostly uniform, with only a few faint low-quality spots that aren’t a big concern.
 
-Overall, this dataset is high quality and suitable for downstream analysis
-
+    Overall, this dataset is high quality and suitable for downstream analysis
 
 ## Part 2
+
+### Cutadapt
+
+#### SRR25630311
+
+-   **R1** : 19.5%
+
+-   **R2** : 20.3%
+
+#### SRR25630392
+
+-   **R1** : 13.0%
+
+-   **R2**: 13.6%
+
+**Sanity check:**
+
+
+#cat SRR25630311_1_trimmed.fastq| grep -c "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
+0
+#cat SRR25630311_2_trimmed.fastq| grep -c "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
+0
+#cat SRR25630392_1_trimmed.fastq| grep -c "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA"
+0
+#cat SRR25630392_2_trimmed.fastq| grep -c "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
+0
+
+
+I figured, if cutadapt did it's job, I should no longer have adapters in my sequence. When I previously grepped for them, there were a considerable amount in each of my files. But now, all of them have zero.
+
+### Trimmomatic
 
 ![**Figure 1.** Trimmed read length distribution for sample SRR25630311. Both R1 and R2 reads cluster tightly at 150 bp after trimming, with only a negligible fraction shorter than full length, indicating that adapter trimming removed very little sequence and that read quality was high across the dataset.](./Fig_report/sampleSRR25630311_len_dist.png)
 
@@ -101,9 +131,9 @@ Overall, this dataset is high quality and suitable for downstream analysis
 
 ### Analysis of graphs
 
-For **SRR25630311**, R1 and R2 look almost identical, with most reads still at full length, so adapter trimming was minimal. 
+For **SRR25630311**, R1 and R2 look almost identical, with most reads still at full length, so adapter trimming was minimal. Generally, I would expect R2 to be trimmed more, since usually it has lower quality data(on account of being sequenced second)
 
-For **SRR25630392**, both R1 and R2 also show nearly all reads at full length, so adapter trimming was minimal here too. 
+For **SRR25630392**, both R1 and R2 also show nearly all reads at full length, so adapter trimming was minimal here too. Generally, I would expect R2 to be trimmed more, since usually it has lower quality data(on account of being sequenced second)
 
 ## Part 3
 
@@ -111,3 +141,9 @@ For **SRR25630392**, both R1 and R2 also show nearly all reads at full length, s
 |-------------|--------------|----------------|
 | SRR25630311 | 33,556,239   | 9,353,061      |
 | SRR25630392 | 7,522,866    | 492,812        |
+
+
+### Strandedness
+After reading through the library kit documentation, the paper and my own results, I have come to the conclusion that stranded=reverse is the way to go. To start of the library kit used is  Revvity NEXTFLEX Rapid Directional RNA-seq Kit 2.0, this is based on a dUTP first strand protocol. As stated in the paper, first strand kits correspond to stranded=reverse.
+
+Furthermore, the proof lies in my own data. For sample SRR25630311, the stranded=reverse run produced 9,354,977 assigned reads, while stranded=yes produced only 490,606. For sample SRR25630392, the stranded=reverse run produced 2,387,838 assigned reads, while stranded=yes produced only 131,404. In both samples, stranded=reverse assigned roughly 18 to 19 times more reads than stranded=yes.
